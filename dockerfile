@@ -6,16 +6,22 @@ FROM base as monitor
 RUN pip3 install tensorboard --no-cache-dir
 
 # Installing from requirement
-FROM base as production
+FROM base as build
 
 RUN pip install --no-cache-dir pipreqs
 
-RUN /src && pipreqs .
+COPY ./src /src
+
+WORKDIR /src
+
+RUN pipreqs .
 
 RUN pip install -r requirements.txt
 
+FROM build as production
+
 # Installing jupyter, and code-server
-FROM base as development
+FROM build as development
 
 RUN pip install --no-cache-dir jupyter
 
