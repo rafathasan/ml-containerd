@@ -1,0 +1,45 @@
+---
+version: "3"
+services:
+  prod: &prod
+    build: 
+      context: .
+      target: production
+    env_file:
+      - prod.env
+    entrypoint: main.py 
+    ipc: "host"
+    init: true
+    working_dir: /src
+    volumes:
+      - ./src:/src
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"
+              capabilities: [gpu]
+    restart: unless-stopped
+  dev:
+    <<: *prod
+    build:
+      target: development
+    env_file:
+      - dev.env
+    entrypoint: code-server /src --bind-addr 0.0.0.0:8080
+    ports:
+      - 8080:8080
+  monitor:
+    build: 
+      context: .
+      target: monitor
+    entrypoint: tensorboard --logdir=/logs --bind_all 
+    ports: 
+    - 6006:6006
+    volumes:
+      - ./src/logs:/logs:ro
+networks:
+  ml:
+    name: ml-containerd
+    driver: bridge
