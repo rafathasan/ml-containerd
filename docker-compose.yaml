@@ -32,7 +32,7 @@ services:
       - 8080:8080
     volumes:
       - ./src:/src
-      - ./code-server-data:/root/.local/share/code-server
+      - ./.code-server-data:/root/.local/share/code-server
   monitor:
     build: 
       context: .
