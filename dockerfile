@@ -23,9 +23,11 @@ FROM build as production
 # Installing jupyter, and code-server
 FROM build as development
 
+ARG CODE_SERVER_VER='4.10.0'
+
 RUN pip install --no-cache-dir jupyter
 
 RUN apt update && apt install curl -y
 
 # using url is not recommended but it has been used for simplicity
-RUN curl -fsSL https://code-server.dev/install.sh | sh
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version $CODE_SERVER_VER
