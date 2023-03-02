@@ -31,3 +31,7 @@ RUN apt update && apt install curl -y
 
 # using url is not recommended but it has been used for simplicity
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version $CODE_SERVER_VER
+
+RUN code-server --install-extension ms-python.python
+
+RUN code-server --install-extension ms-toolsai.jupyter
